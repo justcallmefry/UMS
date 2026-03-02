@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UMS — Powersports Dual-Path Storefront</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ums-bg: #0f172a;
+      --ums-surface: #1e293b;
+      --ums-border: #334155;
+      --ums-text: #f8fafc;
+      --ums-text-muted: #94a3b8;
+      --ums-accent: #38bdf8;
+      --ums-accent-hover: #7dd3fc;
+      --ums-radius: 12px;
+      --ums-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: var(--ums-bg);
+      color: var(--ums-text);
+      line-height: 1.5;
+    }
+    .header {
+      background: var(--ums-surface);
+      border-bottom: 1px solid var(--ums-border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    .header p {
+      color: var(--ums-text-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ums-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.02em;
+    }
+    .section-desc {
+      color: var(--ums-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .card {
+      background: var(--ums-surface);
+      border: 1px solid var(--ums-border);
+      border-radius: var(--ums-radius);
+      overflow: hidden;
+      box-shadow: var(--ums-shadow);
+    }
+    .card-bar {
+      background: linear-gradient(90deg, var(--ums-accent) 0%, transparent 100%);
+      height: 4px;
+    }
+    .card-body { padding: 1rem; }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary {
+      background: var(--ums-accent);
+      color: var(--ums-bg);
+    }
+    .btn-primary:hover { background: var(--ums-accent-hover); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ums-text-muted);
+      border: 1px solid var(--ums-border);
+    }
+    .btn-ghost:hover { border-color: var(--ums-accent); color: var(--ums-accent); }
+    .iframe-wrap {
+      position: relative;
+      background: var(--ums-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--ums-border);
+    }
+    .iframe-wrap iframe {
+      display: block;
+      width: 100%;
+      height: 420px;
+      border: none;
+    }
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--ums-text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--ums-border);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>UMS — Powersports Dual-Path Storefront</h1>
+    <p>Parts &amp; accessories with fitment · Vehicle inventory &amp; lead generation</p>
+  </header>
+
+  <main class="main">
+    <section class="section" aria-labelledby="parts-heading">
+      <p class="section-title">Parts funnel</p>
+      <h2 id="parts-heading">Find My Vehicle</h2>
+      <p class="section-desc">Vehicle selector and My Garage. Customers choose type, year, make, and model to shop parts that fit—and save vehicles for repeat visits.</p>
+      <div class="card">
+        <div class="card-bar"></div>
+        <div class="card-body">
+          <div class="card-actions">
+            <a href="/find-my-vehicle" target="_blank" rel="noopener" class="btn btn-primary">Open Find My Vehicle</a>
+          </div>
+          <div class="iframe-wrap">
+            <iframe id="iframe-parts" title="Find My Vehicle" src="/find-my-vehicle"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="vehicles-heading">
+      <p class="section-title">Vehicle funnel</p>
+      <h2 id="vehicles-heading">Shop Vehicles</h2>
+      <p class="section-desc">Inventory browse, lead capture, and credit application. For shoppers researching a new unit—lead gen, not cart.</p>
+      <div class="card">
+        <div class="card-bar"></div>
+        <div class="card-body">
+          <div class="card-actions">
+            <a href="/shop-vehicles" target="_blank" rel="noopener" class="btn btn-primary">Open Shop Vehicles</a>
+          </div>
+          <div class="iframe-wrap">
+            <iframe id="iframe-vehicles" title="Shop Vehicles" src="/shop-vehicles"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    UMS middleware · Vehicle list API · Vehicle funnel API · Config-driven inventory, lead webhook, credit app
+  </footer>
+
+  <script>
+    (function () {
+      var base = location.protocol === 'http:' || location.protocol === 'https:' ? location.origin : 'http://localhost:3001';
+      if (location.origin === 'null' || location.origin === 'file://') {
+        document.querySelectorAll('.btn-primary').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (href === '/find-my-vehicle') a.href = base + '/find-my-vehicle';
+          else if (href === '/shop-vehicles') a.href = base + '/shop-vehicles';
+        });
+        var i1 = document.getElementById('iframe-parts');
+        var i2 = document.getElementById('iframe-vehicles');
+        if (i1) i1.src = base + '/find-my-vehicle';
+        if (i2) i2.src = base + '/shop-vehicles';
+      }
+    })();
+  </script>
+</body>
+</html>

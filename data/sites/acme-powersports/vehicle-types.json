@@ -1,0 +1,7 @@
+{
+  "vehicleTypes": [
+    { "code": "dirtbike", "name": "Dirtbike", "sortOrder": 1 },
+    { "code": "atv", "name": "ATV", "sortOrder": 2 },
+    { "code": "utv", "name": "UTV", "sortOrder": 3 }
+  ]
+}

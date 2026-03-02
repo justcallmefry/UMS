@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shop Vehicles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ums-bg: #0f172a;
+      --ums-surface: #1e293b;
+      --ums-border: #334155;
+      --ums-text: #f8fafc;
+      --ums-text-muted: #94a3b8;
+      --ums-accent: #38bdf8;
+      --ums-accent-hover: #7dd3fc;
+      --ums-success: #34d399;
+      --ums-radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; margin: 0; min-height: 100vh; background: var(--ums-bg); color: var(--ums-text); line-height: 1.5; padding: 1.5rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; margin: 0 0 0.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .subtitle { color: var(--ums-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ums-text-muted); margin: 1.5rem 0 0.75rem; }
+    section { margin: 1rem 0; }
+    iframe { width: 100%; height: 420px; border: 1px solid var(--ums-border); border-radius: 8px; background: var(--ums-surface); }
+    .cta { display: inline-block; padding: 0.6rem 1.25rem; background: var(--ums-accent); color: var(--ums-bg); text-decoration: none; border-radius: 8px; font-weight: 600; }
+    .cta:hover { background: var(--ums-accent-hover); }
+    .form-row { margin-bottom: 0.75rem; }
+    .form-row label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ums-text-muted); margin-bottom: 0.25rem; }
+    .form-row input, .form-row textarea { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--ums-border); border-radius: 8px; font-size: 1rem; background: var(--ums-bg); color: var(--ums-text); font-family: inherit; }
+    .form-row textarea { min-height: 80px; resize: vertical; }
+    button[type="submit"] { padding: 0.6rem 1.25rem; background: var(--ums-accent); color: var(--ums-bg); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    button[type="submit"]:hover { background: var(--ums-accent-hover); }
+    .status { font-size: 0.875rem; color: var(--ums-text-muted); margin-top: 0.5rem; }
+    .status.error { color: #f87171; }
+    .status.success { color: var(--ums-success); }
+    .inventory-unavailable { padding: 2rem; text-align: center; background: var(--ums-surface); border: 1px solid var(--ums-border); border-radius: 8px; color: var(--ums-text-muted); }
+    #debug-section { display: none; }
+    body.debug #debug-section { display: block; }
+    #config-json { background: var(--ums-surface); color: var(--ums-text-muted); padding: 0.75rem; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin-top: 0.5rem; border: 1px solid var(--ums-border); }
+  </style>
+</head>
+<body>
+  <div class="container">
+  <h1>Shop Vehicles</h1>
+  <p class="subtitle">Browse our current inventory and get in touch when you find something you like.</p>
+
+  <section id="inventory-section" aria-labelledby="inventory-heading">
+    <h2 id="inventory-heading">Current inventory</h2>
+    <p id="inventory-status" class="status" aria-live="polite">Loading…</p>
+    <iframe id="inventory-iframe" title="Vehicle inventory" style="display:none;"></iframe>
+    <div id="inventory-unavailable" class="inventory-unavailable" style="display:none;">Inventory is currently unavailable. Please contact us for assistance.</div>
+  </section>
+
+  <section aria-labelledby="contact-heading">
+    <h2 id="contact-heading">Get in touch</h2>
+    <a id="credit-cta" class="cta" href="#" style="display:none;">Apply for financing</a>
+    <p id="credit-status" class="status"></p>
+    <div id="lead-form-wrap" style="display:none; margin-top: 1.25rem;">
+      <p>Send us your details and we’ll get in touch.</p>
+      <form id="lead-form">
+        <div class="form-row"><label for="lead-name">Name</label><input id="lead-name" type="text" name="name" required></div>
+        <div class="form-row"><label for="lead-email">Email</label><input id="lead-email" type="email" name="email" required></div>
+        <div class="form-row"><label for="lead-phone">Phone</label><input id="lead-phone" type="tel" name="phone"></div>
+        <div class="form-row"><label for="lead-message">Message</label><textarea id="lead-message" name="message" placeholder="e.g. Interested in a specific vehicle…"></textarea></div>
+        <button type="submit">Submit</button>
+      </form>
+      <p id="lead-result" class="status" aria-live="polite"></p>
+    </div>
+    <p id="lead-status" class="status"></p>
+  </section>
+
+  <section id="debug-section" aria-label="Debug config">
+    <h2>Vehicle funnel config (API response)</h2>
+    <pre id="config-json">Loading…</pre>
+  </section>
+  </div>
+
+  <script>
+    (function () {
+      // Set window.UMS_VEHICLE_FUNNEL_API_BASE if the page is hosted elsewhere. When served from the same host as the API (e.g. /shop-vehicles on the middleware), same origin is used automatically.
+      var API_BASE = window.UMS_VEHICLE_FUNNEL_API_BASE || (location.protocol === 'http:' || location.protocol === 'https:' ? location.origin : 'http://localhost:3001');
+      // Optional: for multi-tenant, set window.UMS_VEHICLE_FUNNEL_SITE_ID = 'acme-powersports'; or pass ?siteId= in the page URL
+      var siteId = window.UMS_VEHICLE_FUNNEL_SITE_ID || (function () { var m = /[?&]siteId=([^&]+)/.exec(location.search); return m ? m[1] : null; })();
+
+      function isRealUrl(v) {
+        if (v == null || typeof v !== 'string') return false;
+        var t = v.trim();
+        return t.length > 0 && !/^\$\{[^}]+\}$/.test(t) && !/^\$\([^)]+\)$/.test(t);
+      }
+
+      var headers = { 'Accept': 'application/json' };
+      if (siteId) headers['X-Site-Id'] = siteId;
+      var url = API_BASE + '/api/vehicle-funnel' + (siteId && location.search.indexOf('siteId=') === -1 ? '?siteId=' + encodeURIComponent(siteId) : '');
+
+      fetch(url, { headers: headers })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var pre = document.getElementById('config-json');
+          if (pre) pre.textContent = JSON.stringify(data, null, 2);
+
+          var f = data.vehicleFunnel || {};
+          var invStatus = document.getElementById('inventory-status');
+          var invIframe = document.getElementById('inventory-iframe');
+          var invUnavail = document.getElementById('inventory-unavailable');
+
+          if (isRealUrl(f.inventoryEmbedUrl)) {
+            invIframe.src = f.inventoryEmbedUrl;
+            invIframe.style.display = 'block';
+            if (invStatus) invStatus.textContent = '';
+            if (invUnavail) invUnavail.style.display = 'none';
+          } else {
+            if (invStatus) invStatus.style.display = 'none';
+            if (invIframe) invIframe.style.display = 'none';
+            if (invUnavail) invUnavail.style.display = 'block';
+          }
+
+          if (isRealUrl(f.creditAppUrl)) {
+            var a = document.getElementById('credit-cta');
+            if (a) { a.href = f.creditAppUrl; a.style.display = 'inline-block'; }
+            var cs = document.getElementById('credit-status');
+            if (cs) cs.textContent = '';
+          } else {
+            var cs = document.getElementById('credit-status');
+            if (cs) cs.textContent = '';
+          }
+
+          if (isRealUrl(f.leadWebhookUrl)) {
+            var wrap = document.getElementById('lead-form-wrap');
+            if (wrap) wrap.style.display = 'block';
+            var ls = document.getElementById('lead-status');
+            if (ls) ls.textContent = '';
+          } else {
+            var ls = document.getElementById('lead-status');
+            if (ls) ls.textContent = '';
+          }
+        })
+        .catch(function (err) {
+          document.getElementById('config-json').textContent = 'Error: ' + err.message;
+          document.getElementById('inventory-status').textContent = 'Unable to load inventory. Please try again later.';
+          document.getElementById('inventory-status').classList.add('error');
+        });
+
+      document.getElementById('lead-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var form = e.target;
+        var payload = {
+          name: form.name.value || '',
+          email: form.email.value || '',
+          phone: form.phone.value || '',
+          message: form.message.value || '',
+          source: 'vehicle-funnel'
+        };
+        var resultEl = document.getElementById('lead-result');
+        resultEl.textContent = 'Sending…';
+        resultEl.classList.remove('error', 'success');
+        var reqHeaders = { 'Content-Type': 'application/json' };
+        if (siteId) reqHeaders['X-Site-Id'] = siteId;
+        fetch(API_BASE + '/api/lead', {
+          method: 'POST',
+          headers: reqHeaders,
+          body: JSON.stringify(payload)
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            resultEl.textContent = data.ok ? 'Thanks — we’ll be in touch soon.' : (data.error || 'Something went wrong.');
+            resultEl.classList.add(data.ok ? 'success' : 'error');
+          })
+          .catch(function (err) {
+            resultEl.textContent = 'Something went wrong. Please try again or contact us directly.';
+            resultEl.classList.add('error');
+          });
+      });
+
+      if (/[?&]debug=1/.test(location.search)) document.body.classList.add('debug');
+    })();
+  </script>
+</body>
+</html>

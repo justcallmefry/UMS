@@ -1,0 +1,8 @@
+{
+  "name": "ums",
+  "private": true,
+  "description": "UMS powersports store — middleware, vehicle funnel, Find My Vehicle.",
+  "scripts": {
+    "start": "node middleware/src/server.js"
+  }
+}

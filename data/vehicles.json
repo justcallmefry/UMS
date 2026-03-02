@@ -1,0 +1,14 @@
+{
+  "vehicles": [
+    {"slug":"2023-yamaha-yz250f","type":"dirtbike","year":2023,"make":"Yamaha","model":"YZ250F","trim":null},
+    {"slug":"2024-yamaha-yz250f","type":"dirtbike","year":2024,"make":"Yamaha","model":"YZ250F","trim":null},
+    {"slug":"2023-honda-crf450r","type":"dirtbike","year":2023,"make":"Honda","model":"CRF450R","trim":null},
+    {"slug":"2024-honda-crf450r","type":"dirtbike","year":2024,"make":"Honda","model":"CRF450R","trim":null},
+    {"slug":"2024-yamaha-yz450f","type":"dirtbike","year":2024,"make":"Yamaha","model":"YZ450F","trim":null},
+    {"slug":"2024-kawasaki-kx450","type":"dirtbike","year":2024,"make":"Kawasaki","model":"KX450","trim":null},
+    {"slug":"2024-suzuki-dr-z400s","type":"dirtbike","year":2024,"make":"Suzuki","model":"DR-Z400S","trim":null},
+    {"slug":"2023-polaris-rzr-1000","type":"utv","year":2023,"make":"Polaris","model":"RZR 1000","trim":"Premium"},
+    {"slug":"2024-polaris-rzr-1000","type":"utv","year":2024,"make":"Polaris","model":"RZR 1000","trim":null},
+    {"slug":"2024-can-am-maverick","type":"utv","year":2024,"make":"Can-Am","model":"Maverick","trim":"X3"}
+  ]
+}

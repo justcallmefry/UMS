@@ -1,0 +1,41 @@
+{
+  "defaultSiteId": "default",
+  "sites": [
+    {
+      "siteId": "default",
+      "name": "Default / single-tenant",
+      "lightspeed": {
+        "accountId": "${LIGHTSPEED_ACCOUNT_ID}",
+        "apiKey": "${LIGHTSPEED_API_KEY}",
+        "apiSecret": "${LIGHTSPEED_API_SECRET}",
+        "storeUrl": "${STORE_CART_URL}"
+      },
+      "vehicles": { "source": "file", "path": "data/vehicles.json" },
+      "vehicleTypesPath": "data/vehicle-types.json",
+      "cartRedirectBase": "${STORE_CART_URL}",
+      "vehicleFunnel": {
+        "inventoryEmbedUrl": "${VEHICLE_INVENTORY_EMBED_URL}",
+        "leadWebhookUrl": "${LEAD_WEBHOOK_URL}",
+        "creditAppUrl": "${CREDIT_APP_URL}"
+      }
+    },
+    {
+      "siteId": "acme-powersports",
+      "name": "Acme Powersports",
+      "lightspeed": {
+        "accountId": "${LIGHTSPEED_ACME_ACCOUNT_ID}",
+        "apiKey": "${LIGHTSPEED_ACME_API_KEY}",
+        "apiSecret": "${LIGHTSPEED_ACME_API_SECRET}",
+        "storeUrl": "https://acme-powersports.com"
+      },
+      "vehicles": { "source": "file", "path": "data/sites/acme-powersports/vehicles.json" },
+      "vehicleTypesPath": "data/sites/acme-powersports/vehicle-types.json",
+      "cartRedirectBase": "https://acme-powersports.com/cart",
+      "vehicleFunnel": {
+        "inventoryEmbedUrl": "https://inventory.example.com/embed",
+        "leadWebhookUrl": "${LEAD_WEBHOOK_ACME}",
+        "creditAppUrl": "https://credit.example.com/apply"
+      }
+    }
+  ]
+}

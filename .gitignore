@@ -1,0 +1,12 @@
+# Dependencies and env
+node_modules/
+.env
+.env.local
+*.log
+
+# Multi-tenant: real site config (use sites.example.json as template)
+config/sites.json
+
+# OS
+.DS_Store
+Thumbs.db

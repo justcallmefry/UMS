@@ -1,0 +1,20 @@
+{
+  "vehicles": [
+    {
+      "slug": "2023-yamaha-yz250f",
+      "type": "dirtbike",
+      "year": 2023,
+      "make": "Yamaha",
+      "model": "YZ250F",
+      "trim": null
+    },
+    {
+      "slug": "2024-yamaha-yz250f",
+      "type": "dirtbike",
+      "year": 2024,
+      "make": "Yamaha",
+      "model": "YZ250F",
+      "trim": null
+    }
+  ]
+}
