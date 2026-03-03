@@ -46,11 +46,10 @@
       box-shadow: var(--ums-shadow);
     }
     .card h2 {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--ums-text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #374151;
       margin: 0 0 1rem;
     }
     .selector-row {
@@ -141,31 +140,31 @@
     <p class="subtitle">Select your ride to shop parts that fit.</p>
 
     <div class="card">
-      <h2>Vehicle selector</h2>
+      <h2>Find My Vehicle</h2>
       <form id="vehicle-form">
         <div class="selector-row">
           <div>
             <label for="v-type">Type</label>
             <select id="v-type" required>
-              <option value="">Choose type</option>
+              <option value="">Choose Type</option>
             </select>
           </div>
           <div>
             <label for="v-year">Year</label>
             <select id="v-year" required disabled>
-              <option value="">Year</option>
+              <option value="">Choose Year</option>
             </select>
           </div>
           <div>
             <label for="v-make">Make</label>
             <select id="v-make" required disabled>
-              <option value="">Make</option>
+              <option value="">Choose Make</option>
             </select>
           </div>
           <div>
             <label for="v-model">Model</label>
             <select id="v-model" required disabled>
-              <option value="">Model</option>
+              <option value="">Choose Model</option>
             </select>
           </div>
         </div>
@@ -207,7 +206,7 @@
           .then(function (r) { return r.json(); })
           .then(function (data) {
             var types = (data.vehicleTypes || []).sort(function (a, b) { return (a.sortOrder || 0) - (b.sortOrder || 0); });
-            typeEl.innerHTML = '<option value="">Choose type</option>' + types.map(function (t) {
+            typeEl.innerHTML = '<option value="">Choose Type</option>' + types.map(function (t) {
               return '<option value="' + escapeHtml(t.code) + '">' + escapeHtml(t.name) + '</option>';
             }).join('');
             statusEl.textContent = '';
@@ -230,16 +229,16 @@
       }
 
       function resetCascade(from) {
-        var opts = '<option value="">' + (from === 'year' ? 'Year' : from === 'make' ? 'Make' : 'Model') + '</option>';
-        if (from === 'year') { yearEl.innerHTML = opts; yearEl.disabled = true; makeEl.innerHTML = '<option value="">Make</option>'; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Model</option>'; modelEl.disabled = true; }
-        else if (from === 'make') { makeEl.innerHTML = opts; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Model</option>'; modelEl.disabled = true; }
+        var opts = '<option value="">' + (from === 'year' ? 'Choose Year' : from === 'make' ? 'Choose Make' : 'Choose Model') + '</option>';
+        if (from === 'year') { yearEl.innerHTML = opts; yearEl.disabled = true; makeEl.innerHTML = '<option value="">Choose Make</option>'; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Choose Model</option>'; modelEl.disabled = true; }
+        else if (from === 'make') { makeEl.innerHTML = opts; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Choose Model</option>'; modelEl.disabled = true; }
         else if (from === 'model') { modelEl.innerHTML = opts; modelEl.disabled = true; }
       }
 
       function fillYears() {
         var list = vehiclesByType;
         var years = unique(list.map(function (v) { return v.year; })).sort(sortDesc);
-        yearEl.innerHTML = '<option value="">Year</option>' + years.map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+        yearEl.innerHTML = '<option value="">Choose Year</option>' + years.map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
         yearEl.disabled = false;
         resetCascade('make');
       }
@@ -247,7 +246,7 @@
         var y = parseInt(yearEl.value, 10);
         var list = vehiclesByType.filter(function (v) { return v.year === y; });
         var makes = unique(list.map(function (v) { return v.make; })).sort();
-        makeEl.innerHTML = '<option value="">Make</option>' + makes.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>'; }).join('');
+        makeEl.innerHTML = '<option value="">Choose Make</option>' + makes.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>'; }).join('');
         makeEl.disabled = false;
         resetCascade('model');
       }
@@ -256,7 +255,7 @@
         var make = makeEl.value;
         var list = vehiclesByType.filter(function (v) { return v.year === y && v.make === make; });
         var models = unique(list.map(function (v) { return v.model; })).sort();
-        modelEl.innerHTML = '<option value="">Model</option>' + models.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>'; }).join('');
+        modelEl.innerHTML = '<option value="">Choose Model</option>' + models.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>'; }).join('');
         modelEl.disabled = false;
       }
 

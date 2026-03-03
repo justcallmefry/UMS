@@ -8,54 +8,61 @@
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 0.4rem 0.5rem;
+      padding: 0.5rem 0.75rem;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 0.8rem;
-      background: #fafafa;
+      font-size: 0.875rem;
+      background: #fff;
       color: #1a1a1a;
-      min-height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      min-height: 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .ums-fmv-heading {
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: #374151;
+      letter-spacing: 0.02em;
     }
     .ums-nav-wrap {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
-      gap: 0.4rem 0.6rem;
+      gap: 0.5rem 0.75rem;
+      margin: 0;
     }
     .ums-nav-wrap label {
       display: none;
     }
     .ums-nav-wrap select {
-      padding: 0.35rem 1.75rem 0.35rem 0.5rem;
-      font-size: 0.8rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 4px;
+      padding: 0.5rem 2rem 0.5rem 0.6rem;
+      font-size: 0.875rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
       background: #fff;
       color: #1a1a1a;
       cursor: pointer;
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.35rem center;
-      min-width: 4.5rem;
+      background-position: right 0.5rem center;
+      min-width: 5.5rem;
     }
-    .ums-nav-wrap select:focus { outline: none; border-color: #2563eb; }
+    .ums-nav-wrap select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,0.15); }
     .ums-nav-wrap .ums-btn {
-      padding: 0.35rem 0.75rem;
-      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.875rem;
       font-weight: 600;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       background: #1a1a1a;
       color: #fff;
       cursor: pointer;
     }
     .ums-nav-wrap .ums-btn:hover { background: #374151; }
-    .ums-nav-msg { font-size: 0.75rem; color: #059669; margin-left: 0.25rem; }
+    .ums-nav-msg { font-size: 0.8rem; color: #059669; margin-left: 0.25rem; font-weight: 500; }
     @media (max-width: 480px) {
+      body { padding: 0.4rem 0.5rem; }
+      .ums-fmv-heading { margin-bottom: 0.4rem; }
       .ums-nav-wrap { gap: 0.5rem; }
       .ums-nav-wrap select { min-height: 44px; min-width: 0; }
       .ums-nav-wrap .ums-btn { min-height: 44px; padding: 0.5rem 1rem; }
@@ -63,15 +70,16 @@
   </style>
 </head>
 <body>
+  <h2 class="ums-fmv-heading">Find My Vehicle</h2>
   <form id="ums-nav-form" class="ums-nav-wrap">
     <label for="v-type">Type</label>
-    <select id="v-type" required><option value="">Type</option></select>
+    <select id="v-type" required><option value="">Choose Type</option></select>
     <label for="v-year">Year</label>
-    <select id="v-year" required disabled><option value="">Year</option></select>
+    <select id="v-year" required disabled><option value="">Choose Year</option></select>
     <label for="v-make">Make</label>
-    <select id="v-make" required disabled><option value="">Make</option></select>
+    <select id="v-make" required disabled><option value="">Choose Make</option></select>
     <label for="v-model">Model</label>
-    <select id="v-model" required disabled><option value="">Model</option></select>
+    <select id="v-model" required disabled><option value="">Choose Model</option></select>
     <button type="submit" class="ums-btn">Find</button>
     <span id="ums-msg" class="ums-nav-msg" style="display:none;"></span>
   </form>
@@ -87,28 +95,28 @@
       function escapeHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
       function unique(arr) { var s = {}; return arr.filter(function (x) { var k = String(x); if (s[k]) return false; s[k] = true; return true; }); }
       function reset(from) {
-        var o = '<option value="">' + (from === 'year' ? 'Year' : from === 'make' ? 'Make' : 'Model') + '</option>';
-        if (from === 'year') { yearEl.innerHTML = o; yearEl.disabled = true; makeEl.innerHTML = '<option value="">Make</option>'; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Model</option>'; modelEl.disabled = true; }
-        else if (from === 'make') { makeEl.innerHTML = o; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Model</option>'; modelEl.disabled = true; }
+        var o = '<option value="">' + (from === 'year' ? 'Choose Year' : from === 'make' ? 'Choose Make' : 'Choose Model') + '</option>';
+        if (from === 'year') { yearEl.innerHTML = o; yearEl.disabled = true; makeEl.innerHTML = '<option value="">Choose Make</option>'; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Choose Model</option>'; modelEl.disabled = true; }
+        else if (from === 'make') { makeEl.innerHTML = o; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Choose Model</option>'; modelEl.disabled = true; }
         else { modelEl.innerHTML = o; modelEl.disabled = true; }
       }
       function fillYears() {
         var years = unique(vehiclesByType.map(function (v) { return v.year; })).sort(function (a,b) { return b - a; });
-        yearEl.innerHTML = '<option value="">Year</option>' + years.map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+        yearEl.innerHTML = '<option value="">Choose Year</option>' + years.map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
         yearEl.disabled = false; reset('make');
       }
       function fillMakes() {
         var y = parseInt(yearEl.value, 10);
         var list = vehiclesByType.filter(function (v) { return v.year === y; });
         var makes = unique(list.map(function (v) { return v.make; })).sort();
-        makeEl.innerHTML = '<option value="">Make</option>' + makes.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + m + '</option>'; }).join('');
+        makeEl.innerHTML = '<option value="">Choose Make</option>' + makes.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + m + '</option>'; }).join('');
         makeEl.disabled = false; reset('model');
       }
       function fillModels() {
         var y = parseInt(yearEl.value, 10), make = makeEl.value;
         var list = vehiclesByType.filter(function (v) { return v.year === y && v.make === make; });
         var models = unique(list.map(function (v) { return v.model; })).sort();
-        modelEl.innerHTML = '<option value="">Model</option>' + models.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + m + '</option>'; }).join('');
+        modelEl.innerHTML = '<option value="">Choose Model</option>' + models.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + m + '</option>'; }).join('');
         modelEl.disabled = false;
       }
       typeEl.addEventListener('change', function () {
@@ -137,7 +145,7 @@
         .then(function (r) { return r.json(); })
         .then(function (d) {
           var types = (d.vehicleTypes || []).sort(function (a,b) { return (a.sortOrder||0) - (b.sortOrder||0); });
-          typeEl.innerHTML = '<option value="">Type</option>' + types.map(function (t) { return '<option value="' + escapeHtml(t.code) + '">' + escapeHtml(t.name) + '</option>'; }).join('');
+          typeEl.innerHTML = '<option value="">Choose Type</option>' + types.map(function (t) { return '<option value="' + escapeHtml(t.code) + '">' + escapeHtml(t.name) + '</option>'; }).join('');
         });
     })();
   </script>
