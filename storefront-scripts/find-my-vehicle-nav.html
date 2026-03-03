@@ -15,13 +15,24 @@
       color: #1a1a1a;
       min-height: 0;
       border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .ums-fmv-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      margin: 0;
     }
     .ums-fmv-heading {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       font-weight: 700;
-      margin: 0 0 0.5rem;
+      margin: 0;
       color: #374151;
       letter-spacing: 0.02em;
+      white-space: nowrap;
     }
     .ums-nav-wrap {
       display: flex;
@@ -62,7 +73,7 @@
     .ums-nav-msg { font-size: 0.8rem; color: #059669; margin-left: 0.25rem; font-weight: 500; }
     @media (max-width: 480px) {
       body { padding: 0.4rem 0.5rem; }
-      .ums-fmv-heading { margin-bottom: 0.4rem; }
+      .ums-fmv-bar { gap: 0.5rem; }
       .ums-nav-wrap { gap: 0.5rem; }
       .ums-nav-wrap select { min-height: 44px; min-width: 0; }
       .ums-nav-wrap .ums-btn { min-height: 44px; padding: 0.5rem 1rem; }
@@ -70,8 +81,9 @@
   </style>
 </head>
 <body>
-  <h2 class="ums-fmv-heading">Find My Vehicle</h2>
-  <form id="ums-nav-form" class="ums-nav-wrap">
+  <div class="ums-fmv-bar">
+    <h2 class="ums-fmv-heading">Find My Vehicle</h2>
+    <form id="ums-nav-form" class="ums-nav-wrap">
     <label for="v-type">Type</label>
     <select id="v-type" required><option value="">Choose Type</option></select>
     <label for="v-year">Year</label>
@@ -83,6 +95,7 @@
     <button type="submit" class="ums-btn">Find</button>
     <span id="ums-msg" class="ums-nav-msg" style="display:none;"></span>
   </form>
+  </div>
   <script>
     (function () {
       var API_BASE = window.UMS_API_BASE || (location.protocol === 'http:' || location.protocol === 'https:' ? location.origin : 'http://localhost:3001');
