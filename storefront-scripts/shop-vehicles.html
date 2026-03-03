@@ -4,37 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shop Vehicles</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ums-bg: #0f172a;
-      --ums-surface: #1e293b;
-      --ums-border: #334155;
-      --ums-text: #f8fafc;
-      --ums-text-muted: #94a3b8;
-      --ums-accent: #38bdf8;
-      --ums-accent-hover: #7dd3fc;
-      --ums-success: #34d399;
-      --ums-radius: 12px;
+      --ums-bg: #fafafa;
+      --ums-surface: #ffffff;
+      --ums-border: #e5e7eb;
+      --ums-text: #1a1a1a;
+      --ums-text-muted: #6b7280;
+      --ums-accent: #2563eb;
+      --ums-accent-hover: #1d4ed8;
+      --ums-success: #059669;
+      --ums-radius: 8px;
     }
     * { box-sizing: border-box; }
-    body { font-family: 'DM Sans', system-ui, sans-serif; margin: 0; min-height: 100vh; background: var(--ums-bg); color: var(--ums-text); line-height: 1.5; padding: 1.5rem; }
-    .container { max-width: 900px; margin: 0 auto; }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; min-height: 100vh; background: var(--ums-bg); color: var(--ums-text); line-height: 1.5; padding: 2rem 1rem; }
+    .container { max-width: 900px; margin: 0 auto; width: 100%; }
     h1 { font-size: 1.75rem; margin: 0 0 0.35rem; font-weight: 700; letter-spacing: -0.02em; }
     .subtitle { color: var(--ums-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
     h2 { font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ums-text-muted); margin: 1.5rem 0 0.75rem; }
     section { margin: 1rem 0; }
-    iframe { width: 100%; height: 420px; border: 1px solid var(--ums-border); border-radius: 8px; background: var(--ums-surface); }
-    .cta { display: inline-block; padding: 0.6rem 1.25rem; background: var(--ums-accent); color: var(--ums-bg); text-decoration: none; border-radius: 8px; font-weight: 600; }
-    .cta:hover { background: var(--ums-accent-hover); }
+    iframe { width: 100%; height: 420px; border: 1px solid var(--ums-border); border-radius: 8px; background: #fff; }
+    .cta { display: inline-block; padding: 0.6rem 1.25rem; background: #1a1a1a; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; }
+    .cta:hover { background: #374151; }
     .form-row { margin-bottom: 0.75rem; }
     .form-row label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ums-text-muted); margin-bottom: 0.25rem; }
-    .form-row input, .form-row textarea { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--ums-border); border-radius: 8px; font-size: 1rem; background: var(--ums-bg); color: var(--ums-text); font-family: inherit; }
+    .form-row input, .form-row textarea { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--ums-border); border-radius: 8px; font-size: 1rem; background: var(--ums-surface); color: var(--ums-text); font-family: inherit; }
     .form-row textarea { min-height: 80px; resize: vertical; }
-    button[type="submit"] { padding: 0.6rem 1.25rem; background: var(--ums-accent); color: var(--ums-bg); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; }
-    button[type="submit"]:hover { background: var(--ums-accent-hover); }
+    button[type="submit"] { padding: 0.6rem 1.25rem; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    button[type="submit"]:hover { background: #374151; }
     .status { font-size: 0.875rem; color: var(--ums-text-muted); margin-top: 0.5rem; }
     .status.error { color: #f87171; }
     .status.success { color: var(--ums-success); }
@@ -42,6 +39,11 @@
     #debug-section { display: none; }
     body.debug #debug-section { display: block; }
     #config-json { background: var(--ums-surface); color: var(--ums-text-muted); padding: 0.75rem; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin-top: 0.5rem; border: 1px solid var(--ums-border); }
+    @media (max-width: 480px) {
+      body { padding: 1rem 0.75rem; }
+      .form-row input, .form-row textarea, button[type="submit"], .cta { min-height: 44px; }
+      iframe { min-height: 320px; }
+    }
   </style>
 </head>
 <body>

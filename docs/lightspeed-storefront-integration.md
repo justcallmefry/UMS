@@ -60,7 +60,7 @@ Exact labels depend on your Lightspeed version; if you don’t see “Custom cod
   </div>
   ```
 
-  3. The compact widget shows **Type | Year | Make | Model | Find** and a “My Garage” link in one row. When a customer picks a vehicle and clicks Find, it’s added to My Garage (same as the full page). They can open “My Garage” to see saved vehicles or go to the full Find My Vehicle page.
+  3. The compact widget shows **Type | Year | Make | Model | Find** in one row. When a customer picks a vehicle and clicks Find, the match is shown. The widget is mobile-friendly (touch targets and wrapping on small screens).
 
 **Option C — Embed as a full page**  
 - Create a page (e.g. “Find My Vehicle”) and embed the full experience:  

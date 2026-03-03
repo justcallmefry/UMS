@@ -4,35 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Find My Vehicle — UMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ums-bg: #0f172a;
-      --ums-surface: #1e293b;
-      --ums-surface-hover: #334155;
-      --ums-border: #334155;
-      --ums-text: #f8fafc;
-      --ums-text-muted: #94a3b8;
-      --ums-accent: #38bdf8;
-      --ums-accent-hover: #7dd3fc;
-      --ums-success: #34d399;
-      --ums-card-bg: #1e293b;
-      --ums-radius: 12px;
-      --ums-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      --ums-bg: #fafafa;
+      --ums-surface: #ffffff;
+      --ums-surface-hover: #f3f4f6;
+      --ums-border: #e5e7eb;
+      --ums-text: #1a1a1a;
+      --ums-text-muted: #6b7280;
+      --ums-accent: #2563eb;
+      --ums-accent-hover: #1d4ed8;
+      --ums-success: #059669;
+      --ums-card-bg: #ffffff;
+      --ums-radius: 8px;
+      --ums-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     * { box-sizing: border-box; }
     body {
-      font-family: 'DM Sans', system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       margin: 0;
       min-height: 100vh;
       background: var(--ums-bg);
       color: var(--ums-text);
       line-height: 1.5;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
-    .container { max-width: 560px; margin: 0 auto; }
+    .container { max-width: 560px; margin: 0 auto; width: 100%; }
     h1 {
       font-size: 1.75rem;
       font-weight: 700;
@@ -79,13 +76,13 @@
       padding: 0.65rem 0.75rem;
       font-family: inherit;
       font-size: 0.95rem;
-      background: var(--ums-bg);
+      background: var(--ums-surface);
       border: 1px solid var(--ums-border);
       border-radius: 8px;
       color: var(--ums-text);
       cursor: pointer;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.75rem center;
       padding-right: 2rem;
@@ -106,11 +103,11 @@
       transition: background 0.2s, transform 0.05s;
     }
     .btn-primary {
-      background: var(--ums-accent);
-      color: var(--ums-bg);
+      background: #1a1a1a;
+      color: #fff;
       margin-top: 0.5rem;
     }
-    .btn-primary:hover { background: var(--ums-accent-hover); }
+    .btn-primary:hover { background: #374151; }
     .btn-primary:active { transform: scale(0.98); }
     .btn-ghost {
       background: transparent;
@@ -122,33 +119,26 @@
     .result {
       margin-top: 1rem;
       padding: 1rem;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
       border-radius: 8px;
       font-size: 0.95rem;
     }
     .result strong { color: var(--ums-accent); }
-    .garage-list { list-style: none; padding: 0; margin: 0; }
-    .garage-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.65rem 0;
-      border-bottom: 1px solid var(--ums-border);
-      font-size: 0.9rem;
-    }
-    .garage-item:last-child { border-bottom: none; }
-    .garage-item .label { color: var(--ums-text-muted); font-size: 0.8rem; }
-    .garage-empty { color: var(--ums-text-muted); font-size: 0.9rem; padding: 0.5rem 0; }
     .status { font-size: 0.85rem; color: var(--ums-text-muted); margin-top: 0.5rem; }
     .status.error { color: #f87171; }
     .status.success { color: var(--ums-success); }
+    @media (max-width: 480px) {
+      body { padding: 1rem 0.75rem; }
+      .selector-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      select, .btn-primary { min-height: 44px; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Find My Vehicle</h1>
-    <p class="subtitle">Select your ride to shop parts that fit. Save vehicles to My Garage for quick access.</p>
+    <p class="subtitle">Select your ride to shop parts that fit.</p>
 
     <div class="card">
       <h2>Vehicle selector</h2>
@@ -184,18 +174,11 @@
       <p id="selector-status" class="status" aria-live="polite"></p>
       <div id="selector-result" class="result" style="display:none;"></div>
     </div>
-
-    <div class="card">
-      <h2>My Garage</h2>
-      <p class="garage-empty" id="garage-empty">No vehicles saved. Find a vehicle and add it here.</p>
-      <ul id="garage-list" class="garage-list" style="display:none;"></ul>
-    </div>
   </div>
 
   <script>
     (function () {
       var API_BASE = window.UMS_VEHICLE_FUNNEL_API_BASE || (location.protocol === 'http:' || location.protocol === 'https:' ? location.origin : 'http://localhost:3001');
-      var GARAGE_KEY = 'ums_my_garage';
 
       var typeEl = document.getElementById('v-type');
       var yearEl = document.getElementById('v-year');
@@ -203,49 +186,9 @@
       var modelEl = document.getElementById('v-model');
       var statusEl = document.getElementById('selector-status');
       var resultEl = document.getElementById('selector-result');
-      var garageList = document.getElementById('garage-list');
-      var garageEmpty = document.getElementById('garage-empty');
 
       var vehiclesByType = [];
-      var allVehicles = [];
 
-      function getGarage() {
-        try {
-          var raw = localStorage.getItem(GARAGE_KEY);
-          return raw ? JSON.parse(raw) : [];
-        } catch (e) { return []; }
-      }
-      function setGarage(arr) {
-        localStorage.setItem(GARAGE_KEY, JSON.stringify(arr));
-        renderGarage();
-      }
-      function addToGarage(vehicle) {
-        var garage = getGarage();
-        if (garage.some(function (v) { return v.slug === vehicle.slug; })) return;
-        garage.push(vehicle);
-        setGarage(garage);
-      }
-      function removeFromGarage(slug) {
-        setGarage(getGarage().filter(function (v) { return v.slug !== slug; }));
-      }
-
-      function renderGarage() {
-        var garage = getGarage();
-        if (garage.length === 0) {
-          garageList.style.display = 'none';
-          garageEmpty.style.display = 'block';
-          return;
-        }
-        garageEmpty.style.display = 'none';
-        garageList.style.display = 'block';
-        garageList.innerHTML = garage.map(function (v) {
-          var label = v.year + ' ' + v.make + ' ' + v.model + (v.trim ? ' ' + v.trim : '');
-          return '<li class="garage-item"><span><span class="label">' + escapeHtml(v.type) + '</span> ' + escapeHtml(label) + '</span><button type="button" class="btn btn-ghost" data-slug="' + escapeHtml(v.slug) + '">Remove</button></li>';
-        }).join('');
-        garageList.querySelectorAll('button').forEach(function (btn) {
-          btn.addEventListener('click', function () { removeFromGarage(btn.getAttribute('data-slug')); });
-        });
-      }
       function escapeHtml(s) {
         var div = document.createElement('div');
         div.textContent = s;
@@ -345,17 +288,11 @@
         var v = list[0];
         var label = v.year + ' ' + v.make + ' ' + v.model + (v.trim ? ' ' + v.trim : '');
         resultEl.style.display = 'block';
-        resultEl.innerHTML = '<strong>Found:</strong> ' + escapeHtml(label) + ' <button type="button" class="btn btn-ghost" id="add-garage-btn">Add to My Garage</button>';
-        document.getElementById('add-garage-btn').addEventListener('click', function () {
-          addToGarage(v);
-          resultEl.innerHTML = '<strong>Added to My Garage.</strong> ' + escapeHtml(label);
-          resultEl.classList.add('status', 'success');
-        });
+        resultEl.innerHTML = '<strong>Found:</strong> ' + escapeHtml(label);
       });
 
       loadTypes();
       loadVehicles(null, function () {});
-      renderGarage();
     })();
   </script>
 </body>
