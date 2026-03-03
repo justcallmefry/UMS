@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find My Vehicle</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0.4rem 0.5rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.8rem;
+      background: transparent;
+      color: #1e293b;
+      min-height: 100%;
+    }
+    .ums-nav-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem 0.6rem;
+    }
+    .ums-nav-wrap label {
+      display: none;
+    }
+    .ums-nav-wrap select {
+      padding: 0.35rem 1.75rem 0.35rem 0.5rem;
+      font-size: 0.8rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background: #fff;
+      color: #1e293b;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.35rem center;
+      min-width: 4.5rem;
+    }
+    .ums-nav-wrap select:focus { outline: none; border-color: #38bdf8; }
+    .ums-nav-wrap .ums-btn {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      background: #38bdf8;
+      color: #0f172a;
+      cursor: pointer;
+    }
+    .ums-nav-wrap .ums-btn:hover { background: #7dd3fc; }
+    .ums-nav-wrap .ums-link {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-left: 0.25rem;
+    }
+    .ums-nav-wrap .ums-link a { color: #38bdf8; text-decoration: none; }
+    .ums-nav-wrap .ums-link a:hover { text-decoration: underline; }
+    .ums-nav-msg { font-size: 0.75rem; color: #16a34a; margin-left: 0.25rem; }
+  </style>
+</head>
+<body>
+  <form id="ums-nav-form" class="ums-nav-wrap">
+    <label for="v-type">Type</label>
+    <select id="v-type" required><option value="">Type</option></select>
+    <label for="v-year">Year</label>
+    <select id="v-year" required disabled><option value="">Year</option></select>
+    <label for="v-make">Make</label>
+    <select id="v-make" required disabled><option value="">Make</option></select>
+    <label for="v-model">Model</label>
+    <select id="v-model" required disabled><option value="">Model</option></select>
+    <button type="submit" class="ums-btn">Find</button>
+    <span class="ums-link"><a id="ums-full-page" href="#" target="_blank">My Garage</a></span>
+    <span id="ums-msg" class="ums-nav-msg" style="display:none;"></span>
+  </form>
+  <script>
+    (function () {
+      var API_BASE = window.UMS_API_BASE || (location.protocol === 'http:' || location.protocol === 'https:' ? location.origin : 'http://localhost:3001');
+      var GARAGE_KEY = 'ums_my_garage';
+      var typeEl = document.getElementById('v-type');
+      var yearEl = document.getElementById('v-year');
+      var makeEl = document.getElementById('v-make');
+      var modelEl = document.getElementById('v-model');
+      var msgEl = document.getElementById('ums-msg');
+      var fullLink = document.getElementById('ums-full-page');
+      fullLink.href = API_BASE + '/find-my-vehicle';
+      var vehiclesByType = [];
+      function escapeHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+      function unique(arr) { var s = {}; return arr.filter(function (x) { var k = String(x); if (s[k]) return false; s[k] = true; return true; }); }
+      function getGarage() { try { var r = localStorage.getItem(GARAGE_KEY); return r ? JSON.parse(r) : []; } catch (e) { return []; } }
+      function addToGarage(v) { var g = getGarage(); if (g.some(function (x) { return x.slug === v.slug; })) return; g.push(v); localStorage.setItem(GARAGE_KEY, JSON.stringify(g)); }
+      function reset(from) {
+        var o = '<option value="">' + (from === 'year' ? 'Year' : from === 'make' ? 'Make' : 'Model') + '</option>';
+        if (from === 'year') { yearEl.innerHTML = o; yearEl.disabled = true; makeEl.innerHTML = '<option value="">Make</option>'; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Model</option>'; modelEl.disabled = true; }
+        else if (from === 'make') { makeEl.innerHTML = o; makeEl.disabled = true; modelEl.innerHTML = '<option value="">Model</option>'; modelEl.disabled = true; }
+        else { modelEl.innerHTML = o; modelEl.disabled = true; }
+      }
+      function fillYears() {
+        var years = unique(vehiclesByType.map(function (v) { return v.year; })).sort(function (a,b) { return b - a; });
+        yearEl.innerHTML = '<option value="">Year</option>' + years.map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+        yearEl.disabled = false; reset('make');
+      }
+      function fillMakes() {
+        var y = parseInt(yearEl.value, 10);
+        var list = vehiclesByType.filter(function (v) { return v.year === y; });
+        var makes = unique(list.map(function (v) { return v.make; })).sort();
+        makeEl.innerHTML = '<option value="">Make</option>' + makes.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + m + '</option>'; }).join('');
+        makeEl.disabled = false; reset('model');
+      }
+      function fillModels() {
+        var y = parseInt(yearEl.value, 10), make = makeEl.value;
+        var list = vehiclesByType.filter(function (v) { return v.year === y && v.make === make; });
+        var models = unique(list.map(function (v) { return v.model; })).sort();
+        modelEl.innerHTML = '<option value="">Model</option>' + models.map(function (m) { return '<option value="' + escapeHtml(m) + '">' + m + '</option>'; }).join('');
+        modelEl.disabled = false;
+      }
+      typeEl.addEventListener('change', function () {
+        var t = typeEl.value;
+        msgEl.style.display = 'none';
+        if (!t) { reset('year'); return; }
+        fetch(API_BASE + '/api/vehicles?type=' + encodeURIComponent(t), { headers: { 'Accept': 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { vehiclesByType = d.vehicles || []; fillYears(); })
+          .catch(function () { vehiclesByType = []; reset('year'); });
+      });
+      yearEl.addEventListener('change', fillMakes);
+      makeEl.addEventListener('change', fillModels);
+      document.getElementById('ums-nav-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var type = typeEl.value, year = yearEl.value, make = makeEl.value, model = modelEl.value;
+        if (!type || !year || !make || !model) return;
+        var list = vehiclesByType.filter(function (v) { return v.type === type && String(v.year) === year && v.make === make && v.model === model; });
+        if (list.length === 0) { msgEl.textContent = 'No match'; msgEl.style.display = 'inline'; return; }
+        var v = list[0];
+        addToGarage(v);
+        msgEl.textContent = 'Added: ' + v.year + ' ' + v.make + ' ' + v.model;
+        msgEl.style.display = 'inline';
+        setTimeout(function () { msgEl.style.display = 'none'; }, 3000);
+      });
+      fetch(API_BASE + '/api/vehicles/types', { headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var types = (d.vehicleTypes || []).sort(function (a,b) { return (a.sortOrder||0) - (b.sortOrder||0); });
+          typeEl.innerHTML = '<option value="">Type</option>' + types.map(function (t) { return '<option value="' + escapeHtml(t.code) + '">' + escapeHtml(t.name) + '</option>'; }).join('');
+        });
+    })();
+  </script>
+</body>
+</html>

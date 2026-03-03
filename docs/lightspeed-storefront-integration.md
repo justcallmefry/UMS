@@ -45,11 +45,28 @@ Exact labels depend on your Lightspeed version; if you don’t see “Custom cod
 **Option A — Link**  
 - Add a nav or prominent link (e.g. **Find My Vehicle**) to: `https://YOUR-MIDDLEWARE-URL/find-my-vehicle`
 
-**Option B — Embed**  
-- Create a page (e.g. “Find My Vehicle”) and embed the same way as Shop Vehicles:  
+**Option B — Embed in the navigation (widget in header)**  
+- If your Lightspeed theme lets you add **custom HTML** or an **iframe** in the header/nav area (e.g. “Header widget,” “Custom code,” or a nav slot):
+  1. Add a block that allows **HTML** or **iframe**.
+  2. Paste this (replace `YOUR-MIDDLEWARE-URL` with your real URL, e.g. `https://ums-qvlh.onrender.com`):
+
+  ```html
+  <div class="ums-find-my-vehicle-nav">
+    <iframe
+      src="https://YOUR-MIDDLEWARE-URL/find-my-vehicle-nav"
+      title="Find My Vehicle"
+      style="width:100%; min-width:320px; height:52px; border:none; display:block;"
+   ></iframe>
+  </div>
+  ```
+
+  3. The compact widget shows **Type | Year | Make | Model | Find** and a “My Garage” link in one row. When a customer picks a vehicle and clicks Find, it’s added to My Garage (same as the full page). They can open “My Garage” to see saved vehicles or go to the full Find My Vehicle page.
+
+**Option C — Embed as a full page**  
+- Create a page (e.g. “Find My Vehicle”) and embed the full experience:  
   `<iframe src="https://YOUR-MIDDLEWARE-URL/find-my-vehicle" title="Find My Vehicle" style="width:100%; min-height:500px; border:none;"></iframe>`
 
-**Option C — Deeper integration (later)**  
+**Option D — Deeper integration (later)**  
 - Your theme could load a script that injects the vehicle selector into a sidebar or header and uses your middleware API (`/api/vehicles/types`, `/api/vehicles`) so the selector looks native. That’s a next phase once the link/iframe flow is live.
 
 ---
@@ -72,6 +89,7 @@ See [vehicle-funnel-integration.md](vehicle-funnel-integration.md) for details. 
 |-------------------------|-------------------------------------------------|
 | Shop Vehicles page      | `https://YOUR-MIDDLEWARE-URL/shop-vehicles`     |
 | Find My Vehicle page    | `https://YOUR-MIDDLEWARE-URL/find-my-vehicle`   |
+| Find My Vehicle (nav widget, for iframe in header) | `https://YOUR-MIDDLEWARE-URL/find-my-vehicle-nav` |
 | Investor/demo showcase  | `https://YOUR-MIDDLEWARE-URL/showcase`          |
 | Vehicle funnel API      | `GET https://YOUR-MIDDLEWARE-URL/api/vehicle-funnel` |
 | Vehicle list (for parts)| `GET https://YOUR-MIDDLEWARE-URL/api/vehicles` and `/api/vehicles/types` |

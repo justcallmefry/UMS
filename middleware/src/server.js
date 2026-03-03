@@ -58,6 +58,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'ums-middleware' });
 });
 
+// Root: redirect to showcase so the base URL isn’t “Not found”
+app.get('/', (req, res) => {
+  res.redirect(302, '/showcase');
+});
+
 // Storefront pages (same host as API — no CORS, no API base config needed)
 const storefrontDir = path.join(__dirname, '..', '..', 'storefront-scripts');
 app.get('/shop-vehicles', (req, res) => {
@@ -68,6 +73,11 @@ app.get('/shop-vehicles', (req, res) => {
 app.get('/find-my-vehicle', (req, res) => {
   res.sendFile(path.join(storefrontDir, 'find-my-vehicle.html'), (err) => {
     if (err) res.status(404).send('Find My Vehicle page not found');
+  });
+});
+app.get('/find-my-vehicle-nav', (req, res) => {
+  res.sendFile(path.join(storefrontDir, 'find-my-vehicle-nav.html'), (err) => {
+    if (err) res.status(404).send('Find My Vehicle nav widget not found');
   });
 });
 app.get('/showcase', (req, res) => {
