@@ -1,0 +1,14 @@
+{
+  "products": 2559,
+  "withType": 1260,
+  "withFitment": 626,
+  "parsedConfident": 608,
+  "universal": 10,
+  "parseFailed": 8,
+  "distinctMakes": 14,
+  "distinctModels": 468,
+  "yearRange": [
+    1950,
+    2026
+  ]
+}
