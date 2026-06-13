@@ -73,8 +73,21 @@
   window.addEventListener('load', postHeight);
 
   fetch(BASE+'/vehicles.json').then(function(r){return r.json();}).then(function(d){
-    VEHICLES=d; (d.vehicleTypes||[]).forEach(function(t){ typeEl.insertAdjacentHTML('beforeend','<option value="'+t.code+'">'+t.name+'</option>'); }); postHeight();
+    VEHICLES=d; (d.vehicleTypes||[]).forEach(function(t){ typeEl.insertAdjacentHTML('beforeend','<option value="'+t.code+'">'+t.name+'</option>'); });
+    applyParams(); postHeight();
   }).catch(function(){ panel.style.display='block'; panel.innerHTML='<div class="ums-status">Could not load vehicle data.</div>'; });
+
+  // When opened as the results page, pre-select the machine from the URL and search.
+  function applyParams(){
+    var raw=(location.hash||location.search||'').replace(/^[#?]/,'');
+    if(!raw) return;
+    var p=new URLSearchParams(raw), t=p.get('t'),y=p.get('y'),mk=p.get('mk'),md=p.get('md');
+    if(!t) return;
+    typeEl.value=t; typeEl.dispatchEvent(new Event('change'));
+    if(y){ yearEl.value=y; yearEl.dispatchEvent(new Event('change')); }
+    if(mk){ makeEl.value=mk; makeEl.dispatchEvent(new Event('change')); }
+    if(md){ modelEl.value=md; modelEl.dispatchEvent(new Event('change')); }
+  }
 
   function loadIndex(){ if(INDEX) return Promise.resolve(INDEX); if(INDEX_LOADING) return INDEX_LOADING;
     INDEX_LOADING=fetch(BASE+'/fitment-index.json').then(function(r){return r.json();}).then(function(d){INDEX=d;return d;}); return INDEX_LOADING; }

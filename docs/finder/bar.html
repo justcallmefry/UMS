@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Find Parts For Your Machine</title>
+<style>
+  :root{--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb;--accent:#1d4ed8;}
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:transparent;}
+  .ums-bar{max-width:1100px;margin:0 auto;background:#f4f4f4;border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .ums-head{display:flex;align-items:center;gap:10px;min-width:185px;}
+  .ums-cog{font-size:26px;color:var(--muted);line-height:1;}
+  .ums-title{font-size:15px;font-weight:700;letter-spacing:.04em;}
+  .ums-title span{font-weight:400;color:var(--muted);}
+  .ums-saved{border:0;background:0;padding:2px 0 0;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;}
+  .ums-selects{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0;}
+  .ums-selects select{flex:1;min-width:115px;min-height:42px;padding:.45rem .6rem;font-size:14px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:var(--ink);cursor:pointer;}
+  .ums-selects select:disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;}
+  .ums-saved-panel{max-width:1100px;margin:6px auto 0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 16px;}
+  .ums-saved-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;cursor:pointer;}
+  @media(max-width:560px){.ums-selects select{min-width:0;flex:1 1 45%;}}
+</style>
+</head>
+<body>
+<div class="ums-bar">
+  <div class="ums-head">
+    <span class="ums-cog" aria-hidden="true">&#9881;</span>
+    <div>
+      <div class="ums-title">FIND PARTS <span>FOR YOUR MACHINE</span></div>
+      <button class="ums-saved" id="ums-saved-btn" type="button">Saved Machines &rsaquo;</button>
+    </div>
+  </div>
+  <div class="ums-selects">
+    <select id="ums-type"  aria-label="Select type"><option value="">Select Type</option></select>
+    <select id="ums-year"  aria-label="Select year"  disabled><option value="">Select Year</option></select>
+    <select id="ums-make"  aria-label="Select make"  disabled><option value="">Select Make</option></select>
+    <select id="ums-model" aria-label="Select model" disabled><option value="">Select Model</option></select>
+  </div>
+</div>
+<div class="ums-saved-panel" id="ums-saved-panel" style="display:none"></div>
+
+<script>
+(function(){
+  var qs = new URLSearchParams(location.search);
+  var RESULTS = (qs.get('results') || 'https://www.unitedmotorsports.com/find-parts').replace(/\/+$/,'');
+  var BASE = (qs.get('dataBase') || '.').replace(/\/+$/,'');
+  var SAVED_KEY='ums_saved_machines';
+  var $=function(id){return document.getElementById(id);};
+  var typeEl=$('ums-type'),yearEl=$('ums-year'),makeEl=$('ums-make'),modelEl=$('ums-model'),savedBtn=$('ums-saved-btn'),savedPanel=$('ums-saved-panel');
+  var VEHICLES=null;
+
+  function postHeight(){ try{ var b=document.querySelector('.ums-bar'); var sp=savedPanel.style.display!=='none'?savedPanel.getBoundingClientRect().height:0; var h=Math.ceil(b.getBoundingClientRect().height + sp + 8); parent.postMessage({umsFinderHeight:h},'*'); }catch(e){} }
+  if(window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+  window.addEventListener('load',postHeight);
+
+  fetch(BASE+'/vehicles.json').then(function(r){return r.json();}).then(function(d){
+    VEHICLES=d; (d.vehicleTypes||[]).forEach(function(t){ typeEl.insertAdjacentHTML('beforeend','<option value="'+t.code+'">'+t.name+'</option>'); }); postHeight();
+  });
+
+  function uniq(a){return a.filter(function(v,i){return a.indexOf(v)===i;});}
+  function modelsForType(t){return (VEHICLES.models||[]).filter(function(m){return m.type===t;});}
+  function inYear(y){return function(m){return m.yearStart?(y>=m.yearStart&&y<=(m.yearEnd||2026)):true;};}
+  function yearsCovered(models){var ys={};models.forEach(function(m){if(m.yearStart){var e=m.yearEnd||2026;for(var y=m.yearStart;y<=e;y++)ys[y]=1;}});return Object.keys(ys).map(Number).sort(function(a,b){return b-a;});}
+  function fillSel(el,vals,ph){el.innerHTML='<option value="">'+ph+'</option>'+vals.map(function(v){return '<option value="'+String(v).replace(/"/g,'&quot;')+'">'+v+'</option>';}).join('');}
+  function reset(l){if(l<=1){fillSel(yearEl,[],'Select Year');yearEl.disabled=true;}if(l<=2){fillSel(makeEl,[],'Select Make');makeEl.disabled=true;}if(l<=3){fillSel(modelEl,[],'Select Model');modelEl.disabled=true;}}
+
+  typeEl.addEventListener('change',function(){reset(1);if(!typeEl.value)return;fillSel(yearEl,yearsCovered(modelsForType(typeEl.value)),'Select Year');yearEl.disabled=false;});
+  yearEl.addEventListener('change',function(){reset(2);if(!yearEl.value)return;var y=+yearEl.value;fillSel(makeEl,uniq(modelsForType(typeEl.value).filter(inYear(y)).map(function(m){return m.make;})).sort(),'Select Make');makeEl.disabled=false;});
+  makeEl.addEventListener('change',function(){reset(3);if(!makeEl.value)return;var y=+yearEl.value;fillSel(modelEl,uniq(modelsForType(typeEl.value).filter(inYear(y)).filter(function(m){return m.make===makeEl.value;}).map(function(m){return m.model;})).sort(),'Select Model');modelEl.disabled=false;});
+  modelEl.addEventListener('change',function(){ if(!modelEl.value) return; go(typeEl.value,yearEl.value,makeEl.value,modelEl.value); });
+
+  function go(t,y,mk,md){
+    var hash='#t='+encodeURIComponent(t)+'&y='+encodeURIComponent(y)+'&mk='+encodeURIComponent(mk)+'&md='+encodeURIComponent(md);
+    var url=RESULTS+hash;
+    if(window.parent!==window){ try{ parent.postMessage({umsNavigate:url},'*'); }catch(e){} }
+    else { window.top.location.href=url; }
+  }
+
+  function getSaved(){try{return JSON.parse(localStorage.getItem(SAVED_KEY)||'[]');}catch(e){return[];}}
+  function setSaved(l){try{localStorage.setItem(SAVED_KEY,JSON.stringify(l));}catch(e){}}
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+  savedBtn.addEventListener('click',function(){
+    if(savedPanel.style.display!=='none'){savedPanel.style.display='none';postHeight();return;}
+    var l=getSaved();
+    savedPanel.innerHTML=l.length?l.map(function(m,i){return '<div data-i="'+i+'" class="ums-saved-row"><span>&#128757; '+esc(m.label)+'</span><span class="ums-del" data-i="'+i+'" style="color:var(--muted);padding:0 6px;">&times;</span></div>';}).join(''):'<div style="font-size:13px;color:var(--muted);">No saved machines yet.</div>';
+    savedPanel.style.display='block';
+    savedPanel.querySelectorAll('.ums-saved-row').forEach(function(row){row.addEventListener('click',function(e){
+      if(e.target.classList.contains('ums-del')){var l2=getSaved();l2.splice(+e.target.getAttribute('data-i'),1);setSaved(l2);savedBtn.click();savedBtn.click();return;}
+      var m=getSaved()[+row.getAttribute('data-i')]; go(m.type,m.year,m.make,m.model);
+    });});
+    postHeight();
+  });
+})();
+</script>
+</body>
+</html>
