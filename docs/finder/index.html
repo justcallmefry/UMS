@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Find Parts For Your Machine — United Motorsports</title>
 <style>
-  :root{--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb;--accent:#c0392b;}
+  :root{--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb;--accent:#1d4ed8;}
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:transparent;}
@@ -65,7 +65,10 @@
   var VEHICLES=null,INDEX=null,INDEX_LOADING=null;
 
   // Report height to a parent frame so an embedding iframe can auto-resize.
-  function postHeight(){ try{ parent.postMessage({umsFinderHeight: document.documentElement.scrollHeight}, '*'); }catch(e){} }
+  function postHeight(){ try{ var el=document.getElementById('ums-finder'); var h=el?Math.ceil(el.getBoundingClientRect().height):document.documentElement.scrollHeight; parent.postMessage({umsFinderHeight: h}, '*'); }catch(e){} }
+  // Navigate the top window via the (privileged) embed snippet when product cards are clicked,
+  // since Ecwid renders custom code inside a sandboxed iframe that can block direct top-navigation.
+  document.addEventListener('click', function(e){ var a=e.target.closest && e.target.closest('.ums-card'); if(a && a.getAttribute('href')){ try{ parent.postMessage({umsNavigate:a.getAttribute('href')}, '*'); }catch(_){} } });
   if (window.ResizeObserver){ new ResizeObserver(postHeight).observe(document.body); }
   window.addEventListener('load', postHeight);
 
