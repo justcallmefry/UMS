@@ -4,47 +4,93 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Find Parts For Your Machine — United Motorsports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb;--accent:#1d4ed8;}
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:transparent;padding-top:12px;}
-  #ums-finder{max-width:1100px;margin:0 auto;}
-  .ums-bar{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
-  .ums-head{display:flex;align-items:center;gap:10px;min-width:190px;}
-  .ums-cog{font-size:26px;color:var(--muted);line-height:1;}
-  .ums-title{font-size:15px;font-weight:700;letter-spacing:.04em;}
-  .ums-title span{font-weight:400;color:var(--muted);}
-  .ums-saved{border:0;background:0;padding:2px 0 0;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;}
-  .ums-selects{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0;}
-  .ums-selects select{flex:1;min-width:115px;min-height:42px;padding:.45rem .6rem;font-size:14px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:var(--ink);cursor:pointer;}
-  .ums-selects select:disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;}
-  .ums-panel{border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;background:#fff;padding:12px 16px;}
-  .ums-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-top:12px;}
-  .ums-card{border:1px solid var(--line);border-radius:8px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;}
-  .ums-card:hover{box-shadow:0 2px 10px rgba(0,0,0,.08);}
-  .ums-card img{width:100%;aspect-ratio:1;object-fit:cover;background:#f7f7f7;}
-  .ums-card .ph{aspect-ratio:1;background:#f7f7f7;}
-  .ums-card .nm{font-size:13px;line-height:1.35;padding:8px 10px 4px;flex:1;}
-  .ums-card .pr{font-size:14px;font-weight:700;padding:0 10px 10px;}
-  .ums-sech{font-size:15px;font-weight:700;margin:16px 0 2px;}
-  .ums-sech small{font-weight:400;color:var(--muted);}
-  .ums-status{font-size:14px;color:var(--muted);padding:6px 0;}
-  .ums-btn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;}
-  @media(max-width:560px){.ums-selects select{min-width:0;flex:1 1 45%;}}
+  :root{
+    --ink:#15171a;--muted:#6b7280;--line:#e6e8ec;--accent:#1d4ed8;--accent-dk:#1741a6;--accent-tint:#eef3ff;
+    --disp:'Saira Condensed',system-ui,sans-serif;--body:system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{font-family:var(--body);color:var(--ink);background:transparent;padding:12px 0;}
+  #ums-finder{max-width:1140px;margin:0 auto;padding:0 12px;}
+  .fm-bar{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;box-shadow:0 1px 2px rgba(16,24,40,.04);}
+  .fm-brand{display:flex;align-items:center;gap:12px;min-width:200px;}
+  .fm-cog{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--accent-tint);color:var(--accent);}
+  .fm-cog svg{width:24px;height:24px;animation:fm-spin 14s linear infinite;}
+  @keyframes fm-spin{to{transform:rotate(360deg);}}
+  .fm-title{font-family:var(--disp);font-weight:700;font-size:21px;line-height:1;letter-spacing:.04em;text-transform:uppercase;}
+  .fm-title em{font-style:normal;font-weight:500;color:var(--muted);}
+  .fm-acc{height:3px;width:46px;background:var(--accent);border-radius:2px;margin:5px 0 4px;}
+  .fm-saved{font-family:var(--body);border:0;background:0;padding:0;cursor:pointer;color:var(--accent);font-size:12.5px;font-weight:600;letter-spacing:.02em;}
+  .fm-saved:hover{color:var(--accent-dk);}
+  .fm-div{width:1px;align-self:stretch;background:var(--line);margin:2px 0;}
+  .fm-selects{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0;}
+  .fm-selects select{font-family:var(--body);flex:1;min-width:120px;height:46px;padding:0 34px 0 13px;font-size:14.5px;font-weight:500;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:9px;cursor:pointer;appearance:none;-webkit-appearance:none;transition:border-color .15s,box-shadow .15s;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231d4ed8' d='M6 8.2L1 3.2l1-1 4 4 4-4 1 1z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+  .fm-selects select:hover:not(:disabled){border-color:#c7cdd6;}
+  .fm-selects select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(29,78,216,.16);}
+  .fm-selects select:disabled{background-color:#f5f6f8;color:#aab0ba;cursor:not-allowed;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c2c7d0' d='M6 8.2L1 3.2l1-1 4 4 4-4 1 1z'/%3E%3C/svg%3E");}
+  /* results */
+  .ums-panel{margin-top:14px;animation:fm-rise .28s ease both;}
+  @keyframes fm-rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .ums-result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    padding-bottom:12px;border-bottom:2px solid var(--ink);}
+  .ums-machine{font-family:var(--disp);font-weight:700;font-size:23px;letter-spacing:.02em;text-transform:uppercase;}
+  .ums-count{display:inline-block;font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.04em;
+    text-transform:uppercase;color:#fff;background:var(--accent);border-radius:999px;padding:4px 11px;margin-left:8px;vertical-align:2px;}
+  .ums-btn{font-family:var(--body);border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:9px 15px;
+    font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);transition:border-color .15s,color .15s;}
+  .ums-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .ums-sech{font-family:var(--disp);font-weight:600;font-size:16px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+    margin:22px 0 2px;display:flex;align-items:center;gap:9px;}
+  .ums-sech::after{content:"";flex:1;height:1px;background:var(--line);}
+  .ums-chip{font-family:var(--body);font-weight:600;font-size:11.5px;color:var(--muted);background:#f1f3f6;border-radius:999px;padding:2px 9px;letter-spacing:.02em;}
+  .ums-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:14px;margin-top:14px;}
+  .ums-card{position:relative;border:1px solid var(--line);border-radius:11px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;background:#fff;transition:transform .15s,box-shadow .15s,border-color .15s;}
+  .ums-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(16,24,40,.10);border-color:var(--accent);}
+  .ums-card-img{aspect-ratio:1;background:#f7f8fa;display:flex;align-items:center;justify-content:center;}
+  .ums-card-img img{width:100%;height:100%;object-fit:cover;}
+  .ums-card .ph{width:100%;height:100%;}
+  .ums-card .nm{font-size:13px;line-height:1.36;padding:10px 11px 4px;flex:1;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .ums-card .pr{font-size:15px;font-weight:700;padding:0 11px 11px;}
+  .ums-fits{position:absolute;top:8px;left:8px;z-index:1;font-family:var(--body);font-weight:700;font-size:10px;
+    letter-spacing:.06em;color:#fff;background:var(--accent);border-radius:5px;padding:3px 7px;box-shadow:0 1px 3px rgba(0,0,0,.18);}
+  .ums-status{font-size:14.5px;color:var(--muted);padding:14px 0;}
+  /* saved panel */
+  .fm-savedpanel-inner{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 16px;margin-top:10px;}
+  .ums-saved-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;font-size:14.5px;cursor:pointer;border-top:1px solid var(--line);}
+  .ums-saved-row:first-child{border-top:0;}
+  .ums-saved-row:hover{color:var(--accent);}
+  .ums-del{color:#aab0ba;padding:0 4px;font-size:18px;line-height:1;}
+  .ums-del:hover{color:var(--accent);}
+  @media(max-width:680px){
+    body{padding:10px 0;}
+    .fm-bar{flex-direction:column;align-items:stretch;gap:14px;padding:14px;}
+    .fm-brand{min-width:0;}.fm-div{display:none;}
+    .fm-selects{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .fm-selects select{min-width:0;height:50px;font-size:15px;}
+    .ums-machine{font-size:20px;}
+    .ums-grid{grid-template-columns:repeat(auto-fill,minmax(46%,1fr));gap:11px;}
+  }
 </style>
 </head>
 <body>
 <div id="ums-finder">
-  <div class="ums-bar">
-    <div class="ums-head">
-      <span class="ums-cog" aria-hidden="true">&#9881;</span>
+  <div class="fm-bar">
+    <div class="fm-brand">
+      <span class="fm-cog" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm0 6a2 2 0 110-4 2 2 0 010 4z"/><path d="M21 12.9v-1.8l-2.1-.7a6.9 6.9 0 00-.6-1.4l1-2-1.3-1.3-2 1a6.9 6.9 0 00-1.4-.6L13.9 3h-1.8l-.7 2.1a6.9 6.9 0 00-1.4.6l-2-1L6.7 6l1 2a6.9 6.9 0 00-.6 1.4L5 10.1v1.8l2.1.7c.15.49.35.96.6 1.4l-1 2 1.3 1.3 2-1c.44.25.91.45 1.4.6l.7 2.1h1.8l.7-2.1c.49-.15.96-.35 1.4-.6l2 1 1.3-1.3-1-2c.25-.44.45-.91.6-1.4l2.1-.7z" opacity=".9"/></svg></span>
       <div>
-        <div class="ums-title">FIND PARTS <span>FOR YOUR MACHINE</span></div>
-        <button class="ums-saved" id="ums-saved-btn" type="button">Saved Machines &rsaquo;</button>
+        <div class="fm-title">Find Parts <em>for your machine</em></div>
+        <div class="fm-acc"></div>
+        <button class="fm-saved" id="ums-saved-btn" type="button">SAVED MACHINES &rsaquo;</button>
       </div>
     </div>
-    <div class="ums-selects">
+    <div class="fm-div" aria-hidden="true"></div>
+    <div class="fm-selects">
       <select id="ums-type"  aria-label="Select type"><option value="">Select Type</option></select>
       <select id="ums-year"  aria-label="Select year"  disabled><option value="">Select Year</option></select>
       <select id="ums-make"  aria-label="Select make"  disabled><option value="">Select Make</option></select>
@@ -64,20 +110,16 @@
   var typeEl=$('ums-type'),yearEl=$('ums-year'),makeEl=$('ums-make'),modelEl=$('ums-model'),panel=$('ums-panel'),savedBtn=$('ums-saved-btn');
   var VEHICLES=null,INDEX=null,INDEX_LOADING=null;
 
-  // Report height to a parent frame so an embedding iframe can auto-resize.
   function postHeight(){ try{ parent.postMessage({umsFinderHeight: Math.ceil(document.body.scrollHeight)}, '*'); }catch(e){} }
-  // Navigate the top window via the (privileged) embed snippet when product cards are clicked,
-  // since Ecwid renders custom code inside a sandboxed iframe that can block direct top-navigation.
-  document.addEventListener('click', function(e){ var a=e.target.closest && e.target.closest('.ums-card'); if(a && a.getAttribute('href')){ try{ parent.postMessage({umsNavigate:a.getAttribute('href')}, '*'); }catch(_){} } });
   if (window.ResizeObserver){ new ResizeObserver(postHeight).observe(document.body); }
   window.addEventListener('load', postHeight);
+  document.addEventListener('click', function(e){ var a=e.target.closest && e.target.closest('.ums-card'); if(a && a.getAttribute('href')){ try{ parent.postMessage({umsNavigate:a.getAttribute('href')}, '*'); }catch(_){} } });
 
   fetch(BASE+'/vehicles.json').then(function(r){return r.json();}).then(function(d){
     VEHICLES=d; (d.vehicleTypes||[]).forEach(function(t){ typeEl.insertAdjacentHTML('beforeend','<option value="'+t.code+'">'+t.name+'</option>'); });
     applyParams(); postHeight();
   }).catch(function(){ panel.style.display='block'; panel.innerHTML='<div class="ums-status">Could not load vehicle data.</div>'; });
 
-  // When opened as the results page, pre-select the machine from the URL and search.
   function applyParams(){
     var raw=(location.hash||location.search||'').replace(/^[#?]/,'');
     if(!raw) return;
@@ -117,22 +159,23 @@
     return {exact:exact,typeMatch:typeMatch,universal:universal};}
 
   function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
-  function card(p){var url=p.url||(STORE+'/products/');return '<a class="ums-card" href="'+esc(url)+'" target="_top">'+(p.image?'<img loading="lazy" src="'+esc(p.image)+'" alt="">':'<div class="ph"></div>')+'<div class="nm">'+esc(p.name)+'</div>'+(p.price?'<div class="pr">$'+esc(p.price)+'</div>':'')+'</a>';}
-  function grid(list){return list.length?'<div class="ums-grid">'+list.slice(0,60).map(card).join('')+'</div>':'';}
+  function card(p,isExact){var url=p.url||(STORE+'/products/');var img=p.image?'<img loading="lazy" src="'+esc(p.image)+'" alt="">':'<div class="ph"></div>';
+    return '<a class="ums-card" href="'+esc(url)+'">'+(isExact?'<span class="ums-fits">FITS</span>':'')+'<div class="ums-card-img">'+img+'</div><div class="nm">'+esc(p.name)+'</div>'+(p.price?'<div class="pr">$'+esc(p.price)+'</div>':'')+'</a>';}
+  function grid(list,isExact){return list.length?'<div class="ums-grid">'+list.slice(0,60).map(function(p){return card(p,isExact);}).join('')+'</div>':'';}
+  function sech(title,n){return '<div class="ums-sech">'+title+' <span class="ums-chip">'+n+'</span></div>';}
 
   function runSearch(){
     var v={type:typeEl.value,year:+yearEl.value,make:makeEl.value,model:modelEl.value};
     panel.style.display='block'; panel.innerHTML='<div class="ums-status">Finding parts for '+v.year+' '+esc(v.make)+' '+esc(v.model)+'&hellip;</div>'; postHeight();
     loadIndex().then(function(idx){
       var r=match(v,idx),label=v.year+' '+v.make+' '+v.model;
-      var html='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">'+
-        '<div class="ums-sech" style="margin-top:0">'+esc(label)+' &mdash; <span style="color:var(--accent)">'+r.exact.length+' parts fit</span></div>'+
+      var html='<div class="ums-result-head"><div class="ums-machine">'+esc(label)+'<span class="ums-count">'+r.exact.length+' parts fit</span></div>'+
         '<button class="ums-btn" id="ums-save2" type="button">&#9733; Save machine</button></div>';
-      html+=r.exact.length?grid(r.exact):'<div class="ums-status">No vehicle-specific parts found for this exact machine yet — try the items below.</div>';
-      if(r.typeMatch.length) html+='<div class="ums-sech">Also fits '+esc(v.type)+' <small>('+r.typeMatch.length+')</small></div>'+grid(r.typeMatch);
-      if(r.universal.length) html+='<div class="ums-sech">Universal <small>('+r.universal.length+')</small></div>'+grid(r.universal);
+      html+=r.exact.length?grid(r.exact,true):'<div class="ums-status">No vehicle-specific parts found for this exact machine yet &mdash; see the options below.</div>';
+      if(r.typeMatch.length) html+=sech('Also fits '+esc(v.type),r.typeMatch.length)+grid(r.typeMatch,false);
+      if(r.universal.length) html+=sech('Universal',r.universal.length)+grid(r.universal,false);
       panel.innerHTML=html; postHeight();
-      var sb=$('ums-save2'); if(sb) sb.onclick=function(){saveMachine(v,label);sb.textContent='✓ Saved';};
+      var sb=$('ums-save2'); if(sb) sb.onclick=function(){saveMachine(v,label);sb.innerHTML='&#10003; Saved';};
     });
   }
 
@@ -140,11 +183,11 @@
   function setSaved(l){try{localStorage.setItem(SAVED_KEY,JSON.stringify(l));}catch(e){}}
   function saveMachine(v,label){var l=getSaved();if(!l.some(function(x){return x.label===label;})){l.unshift({type:v.type,year:v.year,make:v.make,model:v.model,label:label});setSaved(l);}}
   savedBtn.addEventListener('click',function(){var l=getSaved();panel.style.display='block';
-    panel.innerHTML='<div class="ums-sech" style="margin-top:0">Saved machines</div>'+(l.length?l.map(function(m,i){return '<div data-i="'+i+'" class="ums-saved-row" style="display:flex;justify-content:space-between;padding:8px 0;border-top:'+(i?'1px solid var(--line)':'0')+';cursor:pointer;font-size:14px;"><span>&#128757; '+esc(m.label)+'</span><span class="ums-del" data-i="'+i+'" style="color:var(--muted);padding:0 6px;">&times;</span></div>';}).join(''):'<div class="ums-status">No saved machines yet. Find your machine, then "Save machine".</div>');
+    panel.innerHTML='<div class="ums-sech" style="margin-top:0">Saved machines</div><div class="fm-savedpanel-inner">'+(l.length?l.map(function(m,i){return '<div data-i="'+i+'" class="ums-saved-row"><span>&#128757;&nbsp; '+esc(m.label)+'</span><span class="ums-del" data-i="'+i+'">&times;</span></div>';}).join(''):'<div class="ums-status" style="padding:4px 0">No saved machines yet. Find your machine, then "Save machine".</div>')+'</div>';
     panel.querySelectorAll('.ums-saved-row').forEach(function(row){row.addEventListener('click',function(e){
       if(e.target.classList.contains('ums-del')){var l2=getSaved();l2.splice(+e.target.getAttribute('data-i'),1);setSaved(l2);savedBtn.click();return;}
       var m=getSaved()[+row.getAttribute('data-i')];
-      typeEl.value=m.type;typeEl.dispatchEvent(new Event('change'));yearEl.value=m.year;yearEl.dispatchEvent(new Event('change'));makeEl.value=m.make;makeEl.dispatchEvent(new Event('change'));modelEl.value=m.model;modelEl.dispatchEvent(new Event('change'));}); });
+      typeEl.value=m.type;typeEl.dispatchEvent(new Event('change'));yearEl.value=m.year;yearEl.dispatchEvent(new Event('change'));makeEl.value=m.make;makeEl.dispatchEvent(new Event('change'));modelEl.value=m.md||m.model;modelEl.dispatchEvent(new Event('change'));}); });
     postHeight();
   });
 })();

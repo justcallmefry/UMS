@@ -4,41 +4,86 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Find Parts For Your Machine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb;--accent:#1d4ed8;}
+  :root{
+    --ink:#15171a;--muted:#6b7280;--line:#e6e8ec;--accent:#1d4ed8;--accent-dk:#1741a6;--accent-tint:#eef3ff;
+    --disp:'Saira Condensed',system-ui,sans-serif;--body:system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
   *{box-sizing:border-box;} html,body{margin:0;padding:0;}
-  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:transparent;padding-top:12px;}
-  .ums-bar{max-width:1100px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
-  .ums-head{display:flex;align-items:center;gap:10px;min-width:185px;}
-  .ums-cog{font-size:26px;color:var(--muted);line-height:1;}
-  .ums-title{font-size:15px;font-weight:700;letter-spacing:.04em;}
-  .ums-title span{font-weight:400;color:var(--muted);}
-  .ums-saved{border:0;background:0;padding:2px 0 0;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;}
-  .ums-selects{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0;}
-  .ums-selects select{flex:1;min-width:115px;min-height:42px;padding:.45rem .6rem;font-size:14px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:var(--ink);cursor:pointer;}
-  .ums-selects select:disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;}
-  .ums-saved-panel{max-width:1100px;margin:6px auto 0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 16px;}
-  .ums-saved-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;cursor:pointer;}
-  @media(max-width:560px){.ums-selects select{min-width:0;flex:1 1 45%;}}
+  body{font-family:var(--body);color:var(--ink);background:transparent;padding:12px 0;}
+  .fm{max-width:1140px;margin:0 auto;padding:0 12px;}
+  .fm-bar{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;box-shadow:0 1px 2px rgba(16,24,40,.04);}
+  /* brand block */
+  .fm-brand{display:flex;align-items:center;gap:12px;min-width:200px;}
+  .fm-cog{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:none;
+    border-radius:10px;background:var(--accent-tint);color:var(--accent);}
+  .fm-cog svg{width:24px;height:24px;animation:fm-spin 14s linear infinite;}
+  @keyframes fm-spin{to{transform:rotate(360deg);}}
+  .fm-title{font-family:var(--disp);font-weight:700;font-size:21px;line-height:1;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--ink);}
+  .fm-title em{font-style:normal;font-weight:500;color:var(--muted);}
+  .fm-acc{height:3px;width:46px;background:var(--accent);border-radius:2px;margin:5px 0 4px;}
+  .fm-saved{font-family:var(--body);border:0;background:0;padding:0;cursor:pointer;color:var(--accent);
+    font-size:12.5px;font-weight:600;letter-spacing:.02em;display:inline-flex;align-items:center;gap:3px;}
+  .fm-saved:hover{color:var(--accent-dk);}
+  /* divider */
+  .fm-div{width:1px;align-self:stretch;background:var(--line);margin:2px 0;}
+  /* selects */
+  .fm-selects{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0;}
+  .fm-selects select{font-family:var(--body);flex:1;min-width:120px;height:46px;padding:0 34px 0 13px;
+    font-size:14.5px;font-weight:500;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:9px;
+    cursor:pointer;appearance:none;-webkit-appearance:none;transition:border-color .15s,box-shadow .15s;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231d4ed8' d='M6 8.2L1 3.2l1-1 4 4 4-4 1 1z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;}
+  .fm-selects select:hover:not(:disabled){border-color:#c7cdd6;}
+  .fm-selects select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(29,78,216,.16);}
+  .fm-selects select:disabled{background-color:#f5f6f8;color:#aab0ba;cursor:not-allowed;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c2c7d0' d='M6 8.2L1 3.2l1-1 4 4 4-4 1 1z'/%3E%3C/svg%3E");}
+  /* saved panel */
+  .fm-savedpanel{max-width:1140px;margin:8px auto 0;padding:0 12px;}
+  .fm-savedpanel-inner{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 16px;}
+  .ums-saved-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;font-size:14.5px;
+    cursor:pointer;border-top:1px solid var(--line);}
+  .ums-saved-row:first-child{border-top:0;}
+  .ums-saved-row:hover{color:var(--accent);}
+  .ums-del{color:#aab0ba;padding:0 4px;font-size:18px;line-height:1;}
+  .ums-del:hover{color:var(--accent);}
+  @media(max-width:680px){
+    body{padding:10px 0;}
+    .fm-bar{flex-direction:column;align-items:stretch;gap:14px;padding:14px;}
+    .fm-brand{min-width:0;}
+    .fm-div{display:none;}
+    .fm-title{font-size:20px;}
+    .fm-selects{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .fm-selects select{min-width:0;height:50px;font-size:15px;}
+  }
 </style>
 </head>
 <body>
-<div class="ums-bar">
-  <div class="ums-head">
-    <span class="ums-cog" aria-hidden="true">&#9881;</span>
-    <div>
-      <div class="ums-title">FIND PARTS <span>FOR YOUR MACHINE</span></div>
-      <button class="ums-saved" id="ums-saved-btn" type="button">Saved Machines &rsaquo;</button>
+<div class="fm">
+  <div class="fm-bar">
+    <div class="fm-brand">
+      <span class="fm-cog" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm0 6a2 2 0 110-4 2 2 0 010 4z"/><path d="M21 12.9v-1.8l-2.1-.7a6.9 6.9 0 00-.6-1.4l1-2-1.3-1.3-2 1a6.9 6.9 0 00-1.4-.6L13.9 3h-1.8l-.7 2.1a6.9 6.9 0 00-1.4.6l-2-1L6.7 6l1 2a6.9 6.9 0 00-.6 1.4L5 10.1v1.8l2.1.7c.15.49.35.96.6 1.4l-1 2 1.3 1.3 2-1c.44.25.91.45 1.4.6l.7 2.1h1.8l.7-2.1c.49-.15.96-.35 1.4-.6l2 1 1.3-1.3-1-2c.25-.44.45-.91.6-1.4l2.1-.7z" opacity=".9"/></svg></span>
+      <div>
+        <div class="fm-title">Find Parts <em>for your machine</em></div>
+        <div class="fm-acc"></div>
+        <button class="fm-saved" id="ums-saved-btn" type="button">SAVED MACHINES &rsaquo;</button>
+      </div>
+    </div>
+    <div class="fm-div" aria-hidden="true"></div>
+    <div class="fm-selects">
+      <select id="ums-type"  aria-label="Select type"><option value="">Select Type</option></select>
+      <select id="ums-year"  aria-label="Select year"  disabled><option value="">Select Year</option></select>
+      <select id="ums-make"  aria-label="Select make"  disabled><option value="">Select Make</option></select>
+      <select id="ums-model" aria-label="Select model" disabled><option value="">Select Model</option></select>
     </div>
   </div>
-  <div class="ums-selects">
-    <select id="ums-type"  aria-label="Select type"><option value="">Select Type</option></select>
-    <select id="ums-year"  aria-label="Select year"  disabled><option value="">Select Year</option></select>
-    <select id="ums-make"  aria-label="Select make"  disabled><option value="">Select Make</option></select>
-    <select id="ums-model" aria-label="Select model" disabled><option value="">Select Model</option></select>
-  </div>
+  <div class="fm-savedpanel" id="ums-saved-panel" style="display:none"></div>
 </div>
-<div class="ums-saved-panel" id="ums-saved-panel" style="display:none"></div>
 
 <script>
 (function(){
@@ -83,7 +128,7 @@
   savedBtn.addEventListener('click',function(){
     if(savedPanel.style.display!=='none'){savedPanel.style.display='none';postHeight();return;}
     var l=getSaved();
-    savedPanel.innerHTML=l.length?l.map(function(m,i){return '<div data-i="'+i+'" class="ums-saved-row"><span>&#128757; '+esc(m.label)+'</span><span class="ums-del" data-i="'+i+'" style="color:var(--muted);padding:0 6px;">&times;</span></div>';}).join(''):'<div style="font-size:13px;color:var(--muted);">No saved machines yet.</div>';
+    savedPanel.innerHTML='<div class="fm-savedpanel-inner">'+(l.length?l.map(function(m,i){return '<div data-i="'+i+'" class="ums-saved-row"><span>&#128757;&nbsp; '+esc(m.label)+'</span><span class="ums-del" data-i="'+i+'">&times;</span></div>';}).join(''):'<div style="font-size:13.5px;color:var(--muted);padding:4px 0;">No saved machines yet.</div>')+'</div>';
     savedPanel.style.display='block';
     savedPanel.querySelectorAll('.ums-saved-row').forEach(function(row){row.addEventListener('click',function(e){
       if(e.target.classList.contains('ums-del')){var l2=getSaved();l2.splice(+e.target.getAttribute('data-i'),1);setSaved(l2);savedBtn.click();savedBtn.click();return;}
