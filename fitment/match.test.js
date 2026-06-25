@@ -15,6 +15,8 @@ const index = [
   entry('C', ['Dirtbike'], null),                               // type-only dirtbike
   entry('D', [], 'Universal Fitment'),                          // universal
   entry('E', ['ATV'], "Honda TRX450R/ER (06-14')"),            // exact ATV, different type
+  entry('F', ['Dirtbike'], 'KTM, Husqvarna, GasGas Most Years and Models'), // broad make-level
+  entry('G', ['Dirtbike'], "KTM SX65 (98-10')"),               // exact for KTM SX65 1998-2010
 ];
 
 test('exact match on make+model+year', () => {
@@ -41,4 +43,10 @@ test('ATV part does not exact-match a dirtbike pick', () => {
 
 test('fitCount returns the exact bucket size', () => {
   assert.equal(fitCount({ type: 'Dirtbike', year: 2020, make: 'Yamaha', model: 'YZ250F' }, index), 1);
+});
+
+test('make-level "fits all KTM" tag lands in broadMake, NOT exact', () => {
+  const r = matchProducts({ type: 'Dirtbike', year: 2006, make: 'KTM', model: 'SX65' }, index);
+  assert.deepEqual(r.exact.map((p) => p.sku), ['G']);        // only the model+year specific part
+  assert.deepEqual(r.broadMake.map((p) => p.sku), ['F']);    // the broad "fits all KTM" part
 });

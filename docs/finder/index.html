@@ -152,11 +152,18 @@
     if(v.year!=null){if(c.yearStart!=null&&v.year<c.yearStart)return false;if(c.yearEnd!=null&&v.year>c.yearEnd)return false;}
     return true;
   }
-  function match(v,index){var exact=[],typeMatch=[],universal=[];for(var i=0;i<index.length;i++){var p=index[i];
-    if(p.clauses&&p.clauses.length){if(p.clauses.some(function(c){return clauseFits(c,v);}))exact.push(p);continue;}
-    if(p.universal){universal.push(p);continue;}
-    if(v.type&&p.types&&p.types.indexOf(v.type)>=0)typeMatch.push(p);}
-    return {exact:exact,typeMatch:typeMatch,universal:universal};}
+  function match(v,index){var exact=[],broadMake=[],typeMatch=[],universal=[];
+    for(var i=0;i<index.length;i++){var p=index[i];
+      if(p.clauses&&p.clauses.length){
+        var specific=p.clauses.some(function(c){return !c.makeLevel&&c.models&&c.models.length&&clauseFits(c,v);});
+        if(specific){exact.push(p);continue;}
+        var broad=p.clauses.some(function(c){return c.makeLevel&&clauseFits(c,v);});
+        if(broad){broadMake.push(p);continue;}
+        continue;
+      }
+      if(p.universal){universal.push(p);continue;}
+      if(v.type&&p.types&&p.types.indexOf(v.type)>=0)typeMatch.push(p);}
+    return {exact:exact,broadMake:broadMake,typeMatch:typeMatch,universal:universal};}
 
   function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
   function card(p,isExact){var url=p.url||(STORE+'/products/');var img=p.image?'<img loading="lazy" src="'+esc(p.image)+'" alt="">':'<div class="ph"></div>';
@@ -169,9 +176,11 @@
     panel.style.display='block'; panel.innerHTML='<div class="ums-status">Finding parts for '+v.year+' '+esc(v.make)+' '+esc(v.model)+'&hellip;</div>'; postHeight();
     loadIndex().then(function(idx){
       var r=match(v,idx),label=v.year+' '+v.make+' '+v.model;
-      var html='<div class="ums-result-head"><div class="ums-machine">'+esc(label)+'<span class="ums-count">'+r.exact.length+' parts fit</span></div>'+
+      var fitLabel=r.exact.length===1?'1 part fits':r.exact.length+' parts fit';
+      var html='<div class="ums-result-head"><div class="ums-machine">'+esc(label)+'<span class="ums-count">'+fitLabel+'</span></div>'+
         '<button class="ums-btn" id="ums-save2" type="button">&#9733; Save machine</button></div>';
-      html+=r.exact.length?grid(r.exact,true):'<div class="ums-status">No vehicle-specific parts found for this exact machine yet &mdash; see the options below.</div>';
+      html+=r.exact.length?grid(r.exact,true):'<div class="ums-status">No model-specific parts found for this exact machine yet &mdash; see the broader matches below.</div>';
+      if(r.broadMake.length) html+=sech('Fits many '+esc(v.make)+' models',r.broadMake.length)+grid(r.broadMake,false);
       if(r.typeMatch.length) html+=sech('Also fits '+esc(v.type),r.typeMatch.length)+grid(r.typeMatch,false);
       if(r.universal.length) html+=sech('Universal',r.universal.length)+grid(r.universal,false);
       panel.innerHTML=html; postHeight();

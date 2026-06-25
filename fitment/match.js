@@ -12,25 +12,39 @@
  */
 const { fitsVehicle } = require('./parse');
 
-/** @param {{type,year,make,model}} vehicle  @param {Array} index  product index entries */
+/**
+ * @param {{type,year,make,model}} vehicle  @param {Array} index  product index entries
+ * Buckets, strongest first:
+ *  - exact:     a SPECIFIC clause (real model + year window) covers this machine
+ *  - broadMake: only a make-level clause matches (catalog tagged it "fits all <make>"),
+ *               so it likely fits but the listing isn't model-specific
+ *  - typeMatch: clause-less, fits the vehicle's riding type
+ *  - universal: fits everything
+ */
 function matchProducts(vehicle, index) {
-  const exact = [], typeMatch = [], universal = [];
+  const exact = [], broadMake = [], typeMatch = [], universal = [];
   const vType = vehicle.type;
   for (const p of index) {
-    // A product with specific fitment clauses is exact-or-nothing: if none of its
-    // clauses cover this vehicle, it's specific to OTHER machines, not a fit here.
     if (p.clauses && p.clauses.length) {
-      if (fitsVehicle({ universal: false, clauses: p.clauses }, vehicle)) exact.push(p);
-      continue;
+      // Specific = a non-make-level clause (has a real model) that covers the vehicle.
+      const specific = p.clauses.some(
+        (c) => !c.makeLevel && c.models && c.models.length && fitsVehicle({ universal: false, clauses: [c] }, vehicle)
+      );
+      if (specific) { exact.push(p); continue; }
+      // Otherwise, does a make-level clause cover it? (e.g. "KTM Models", no model/year)
+      const broad = p.clauses.some(
+        (c) => c.makeLevel && fitsVehicle({ universal: false, clauses: [c] }, vehicle)
+      );
+      if (broad) { broadMake.push(p); continue; }
+      continue; // specific to other machines
     }
     if (p.universal) { universal.push(p); continue; }
-    // Clause-less, type-only product (e.g. "Dirtbike" chain lube) fits any vehicle of its type.
     if (vType && p.types && p.types.includes(vType)) { typeMatch.push(p); continue; }
   }
-  return { exact, typeMatch, universal };
+  return { exact, broadMake, typeMatch, universal };
 }
 
-/** Headline count = products that specifically fit this machine. */
+/** Headline count = products that SPECIFICALLY fit this machine (model + year). */
 function fitCount(vehicle, index) {
   return matchProducts(vehicle, index).exact.length;
 }
